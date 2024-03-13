@@ -16,4 +16,5 @@ Das Monitoring basiert auf den OGD-Publikationen des BAFU auf [opendata.swiss](h
 ![image](plots/FormatssLinechart.png)
 
 ## Letze Aktualisierung der OGD Publikationen
+Publikationen welche kein Aktualisierungsdatum haben werden im Jahr 1999 dargestellt.
 ![image](plots/LastUpdate.png)
