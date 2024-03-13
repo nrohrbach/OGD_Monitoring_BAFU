@@ -1,0 +1,8 @@
+name: ogd_monitoring_bafu
+channels:
+  - conda-forge
+dependencies:
+  - requests==2.29.0
+  - pandas==2.0.1
+  - matplotlib==3.7.0
+  - notebook==6.5.4
