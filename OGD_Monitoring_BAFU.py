@@ -3,7 +3,7 @@ import json
 import pandas as pd
 from datetime import datetime
 import matplotlib.pyplot as plt
-%matplotlib inline
+#%matplotlib inline
 
 # Abfrage aller CKAN Packages des BAFU
 Packages = "https://ckan.opendata.swiss/api/3/action/organization_show?id=bundesamt-fur-umwelt-bafu&include_datasets=True"
