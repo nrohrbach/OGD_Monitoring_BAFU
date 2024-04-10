@@ -22,6 +22,23 @@ dfPackages = pd.DataFrame(dict)
 # Mit folgender BaseURL können Details aller Packages abgerufen werden
 DatasetBaseURL = 'https://ckan.opendata.swiss/api/3/action/package_show?id='
 
+# Alle Package-Detailsabfragen
+Datasets = []
+
+for package in Title:
+    try:
+        DataSet = requests.get(DatasetBaseURL + package).json()
+        Maintainer = DataSet['result']['maintainer']
+        Email = DataSet['result']['maintainer_email']
+        LastModified = DataSet['result']['modified']
+        Datasets.append({'Package': package, 'Publisher': Maintainer, 'Mail': Email, 'LastModified':LastModified})
+        
+    except:
+        Datasets.append({'Package': package, 'Publisher': 'Unbekannt', 'Mail': 'Unbekannt','LastModified':''})
+
+# Package Details als Dataframe speichern
+dfPackages = pd.DataFrame(Datasets)
+
 # Alle Datasets aller Packages abfragen
 Datasets = []
 
@@ -39,6 +56,7 @@ for package in Title:
 # Dataframe der Datasets erstellen und mit dem Dataframe der Packages mergen
 dfDatasets = pd.DataFrame(Datasets)
 dfDatasets = dfDatasets.explode('Format', ignore_index=False)
+
 dfDatasets = pd.merge(dfDatasets, dfPackages, how='left', on=['Package'])
 dfDatasets['Date'] = datetime.today().strftime("%Y-%m-%d")
 
