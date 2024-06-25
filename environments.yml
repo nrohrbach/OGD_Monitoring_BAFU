@@ -6,3 +6,4 @@ dependencies:
   - pandas==2.0.1
   - matplotlib==3.7.0
   - notebook==6.5.4
+  - numpy==1.26.4
