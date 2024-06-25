@@ -3,7 +3,7 @@ channels:
   - conda-forge
 dependencies:
   - requests==2.29.0
-  - pandas==2.2.1
+  - pandas==2.0.1
   - matplotlib==3.7.0
   - notebook==6.5.4
-  - numpy==1.26.4
+
