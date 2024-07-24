@@ -87,6 +87,16 @@ dfLastUpdateCSV.to_csv("data/BAFU_OGD_Monitoring_LastUpdate.csv", header=False, 
 #Packages - Daten reinladen
 dfPackages = pd.read_csv("data/BAFU_OGD_Monitoring_Packages.csv", parse_dates=['Date'])
 
+# Linechart mit allen BAFU OGD-Publikationen
+dfPackagesBAFU = dfPackages.groupby(dfPackages['Date']).sum()
+dfPackagesBAFU = dfPackagesBAFU.drop("Mail", axis='columns')
+
+dfPackagesBAFU.plot(figsize=(15,10))
+plt.legend(loc='upper left')
+plt.title("Anzahl OGD Publikationen")
+plt.savefig('plots/PackagesBAFULinechart.png')
+plt.close()
+
 #Packages Barchart
 dfPackagesBar = dfPackages.loc[dfPackages['Date']==datetime.today().strftime("%Y-%m-%d")]
 dfPackagesBar = dfPackagesBar.sort_values('Package',ascending=False)
