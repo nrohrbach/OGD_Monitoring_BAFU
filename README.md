@@ -2,6 +2,8 @@
 Auf dieser Seite werden die "Open Government Data" (OGD) Publikationen des BAFU täglich ausgewertet.
 Das Monitoring basiert auf den OGD-Publikationen des BAFU auf [opendata.swiss](https://opendata.swiss/de/organization/bundesamt-fur-umwelt-bafu).
 
+## Anzahl OGD Publikationen im BAFU
+![image](plots/PackagesBAFULinechart.png)
 
 ## Anzahl OGD Publikationen pro Abteilung
 ![image](plots/PackagesBarchart.png)
