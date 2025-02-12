@@ -17,6 +17,12 @@ Das Monitoring basiert auf den OGD-Publikationen des BAFU auf [opendata.swiss](h
 ![image](plots/FormatssBarchart.png)
 ![image](plots/FormatssLinechart.png)
 
+## Anzahl Geo-Datensätze welche über die STAC-API verfügbar sind
+![image](plots/StacLinechart.png)
+![image](plots/StacBarchart.png)
+
+## Anzahl OGD Publikationen nach Lizenz
+![image](plots/LizenzLinechart.png)
+
 ## Letze Aktualisierung der OGD Publikationen
-Publikationen welche kein Aktualisierungsdatum haben werden im Jahr 1999 dargestellt.
 ![image](plots/LastUpdate.png)
