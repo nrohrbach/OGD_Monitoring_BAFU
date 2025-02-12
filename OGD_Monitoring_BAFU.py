@@ -267,3 +267,15 @@ plt.title("Anzahl Geo-Datensätze welche noch nicht auf STAC verfügbar sind")
 plt.savefig('plots/StacLinechart.png')
 plt.close()
 
+#STAC - Barchart
+dfGeodaten_grouped = dfGeodaten.groupby(['Mail', 'STAC'])['Package'].sum().unstack(fill_value=0)
+dfGeodaten_grouped.plot(kind='bar', stacked=True, figsize=(10, 6))
+plt.title('Anzahl Geodatensätze welche über die STAC-API verfügbar sind')
+plt.xlabel('Mail')
+plt.ylabel('Anzahl Geodatensätze')
+plt.xticks(rotation=45, ha='right')
+plt.legend(title='STAC')
+plt.tight_layout()
+plt.savefig('plots/StacBarchart.png')
+plt.close()
+
