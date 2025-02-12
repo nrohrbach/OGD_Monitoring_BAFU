@@ -65,6 +65,10 @@ dfPackages['LastModified'] = dfPackages.apply(lambda row: row['Issued'] if pd.is
 # Lizenzstring kürzen
 dfPackages['License'] = dfPackages['License'].str.split('#').str[1]
 
+dfPackages
+
+Title = Title[100:120]
+
 # Alle Datasets aller Packages abfragen
 Datasets = []
 
@@ -74,11 +78,13 @@ for package in Title:
         # Alle Bezeichungen und Publisher extrahieren
         Format = [s['format'] for s in DataSet['result']['resources']]
         PackageId = [s['package_id'] for s in DataSet['result']['resources']]
-        Display_Name = [s['display_name']['de'] for s in DataSet['result']['resources']]
+        Display_Name = [s['url'] for s in DataSet['result']['resources']]
         Datasets.append({'Package': package, 'Format': Format,'Display_Name':Display_Name})
 
     except:
         Datasets.append({'Package': package, 'Format': 'Unbekannt','Display_Name':''})
+
+Display_Name
 
 # Dataframe der Datasets erstellen und mit dem Dataframe der Packages mergen
 dfDatasets = pd.DataFrame(Datasets)
@@ -93,7 +99,7 @@ dfDatasets['Date'] = datetime.today().strftime("%Y-%m-%d")
 dfDatasets['STAC'] = 'nein'
 
 # Update 'STAC_Attribut' to 'ja' where the 'STAC' column contains 'STAC'
-dfDatasets.loc[dfDatasets['Display_Name'].astype(str).str.contains('STAC'), 'STAC'] = 'ja'
+dfDatasets.loc[dfDatasets['Display_Name'].astype(str).str.contains('data.geo.admin.ch/browser/index.html'), 'STAC'] = 'ja'
 
 # Filter the DataFrame to include only entries where 'Display_Name' contains "map.geo.admin.ch"
 dfGeodaten = dfDatasets[dfDatasets['Display_Name'].astype(str).str.contains('map.geo.admin.ch')]
@@ -127,7 +133,7 @@ dfLastUpdateCSV['Date'] = datetime.today().strftime("%Y-%m-%d")
 dfLastUpdateCSV.to_csv("data/BAFU_OGD_Monitoring_LastUpdate.csv", header=False, index=False, mode='a')
 
 # Übersicht Lizenz speichern
-dfLicenseCSV = dfDatasets.groupby(['License'])['Package'].count().reset_index()
+dfLicenseCSV = dfPackages.groupby(['License'])['Package'].count().reset_index()
 dfLicenseCSV['Date'] = datetime.today().strftime("%Y-%m-%d")
 dfLicenseCSV.to_csv("data/BAFU_OGD_Monitoring_License.csv", header=False, index=False, mode='a')
 
@@ -252,11 +258,12 @@ plt.title("Anzahl OGD Datensätze nach Lizenz")
 plt.savefig('plots/LizenzLinechart.png')
 plt.close()
 
-#STAC NEIN
+#STAC NEIN - Linechart
 dfGeodaten = pd.read_csv("data/BAFU_OGD_Monitoring_STAC.csv", parse_dates=['Date'])
-dfGeodaten = dfGeodaten[dfGeodaten['STAC'] == 'nein']
-dfGeodaten = dfGeodaten.pivot(index="Date", columns=['Mail'],values="Package")
-dfGeodaten.plot(figsize=(15,10))
+dfGeodatenLine = dfGeodaten[dfGeodaten['STAC'] == 'nein']
+dfGeodatenLine = dfGeodatenLine.pivot(index="Date", columns=['Mail'],values="Package")
+dfGeodatenLine.plot(figsize=(15,10))
 plt.title("Anzahl Geo-Datensätze welche noch nicht auf STAC verfügbar sind")
 plt.savefig('plots/StacLinechart.png')
 plt.close()
+
