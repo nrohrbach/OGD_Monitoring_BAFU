@@ -65,10 +65,6 @@ dfPackages['LastModified'] = dfPackages.apply(lambda row: row['Issued'] if pd.is
 # Lizenzstring kürzen
 dfPackages['License'] = dfPackages['License'].str.split('#').str[1]
 
-dfPackages
-
-Title = Title[100:120]
-
 # Alle Datasets aller Packages abfragen
 Datasets = []
 
@@ -83,8 +79,6 @@ for package in Title:
 
     except:
         Datasets.append({'Package': package, 'Format': 'Unbekannt','Display_Name':''})
-
-Display_Name
 
 # Dataframe der Datasets erstellen und mit dem Dataframe der Packages mergen
 dfDatasets = pd.DataFrame(Datasets)
@@ -269,7 +263,7 @@ plt.close()
 
 #STAC - Barchart
 dfGeodaten_grouped = dfGeodaten.groupby(['Mail', 'STAC'])['Package'].sum().unstack(fill_value=0)
-dfGeodaten_grouped.plot(kind='bar', stacked=True, figsize=(10, 6))
+dfGeodaten_grouped.plot(kind='bar', stacked=True, figsize=(10, 6),color=['green','red'])
 plt.title('Anzahl Geodatensätze welche über die STAC-API verfügbar sind')
 plt.xlabel('Mail')
 plt.ylabel('Anzahl Geodatensätze')
