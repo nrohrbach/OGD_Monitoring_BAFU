@@ -262,8 +262,9 @@ plt.savefig('plots/StacLinechart.png')
 plt.close()
 
 #STAC - Barchart
-dfGeodaten_grouped = dfGeodaten.groupby(['Mail', 'STAC'])['Package'].sum().unstack(fill_value=0)
-dfGeodaten_grouped.plot(kind='bar', stacked=True, figsize=(10, 6),color=['green','red'])
+dfGeodatenBarchart = dfGeodaten.loc[dfGeodaten['Date']==datetime.today().strftime("%Y-%m-%d")]
+dfGeodatenBarchart = dfGeodatenBarchart.groupby(['Mail', 'STAC'])['Package'].sum().unstack(fill_value=0)
+dfGeodatenBarchart.plot(kind='bar', stacked=True, figsize=(10, 6),color=['green','red'])
 plt.title('Anzahl Geodatensätze welche über die STAC-API verfügbar sind')
 plt.xlabel('Mail')
 plt.ylabel('Anzahl Geodatensätze')
