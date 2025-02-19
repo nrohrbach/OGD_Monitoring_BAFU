@@ -32,10 +32,64 @@ Title = [s['title_for_slug'] for s in Packages['result']['packages']]
 Maintainer = [s['maintainer'] for s in Packages['result']['packages']]
 Email = [s['maintainer_email'] for s in Packages['result']['packages']]
 LastModified = [s['modified'] for s in Packages['result']['packages']]
+Keywords = [s['keywords'] for s in Packages['result']['packages']]
 
 # Dataframe für Packages erstellen
-dict = {'Publisher': Maintainer, 'Mail': Email, 'Package': Title, 'LastModified': LastModified}
+dict = {'Publisher': Maintainer, 'Mail': Email, 'Package': Title, 'LastModified': LastModified, 'Keywords': Keywords}
 dfPackages = pd.DataFrame(dict)
+
+#Keywords in String umwandeln
+dfPackages['Keywords'] = dfPackages['Keywords'].astype(str).str.lower()
+
+from ast import Or
+# Auswertung nach BAFU-Themen
+
+dfPackages['Keywords'] = dfPackages['Keywords'].astype(str).str.lower()
+
+# Alle BAFU-Themen aus der BAFU-Webseite
+BafuThemen = ['abfall',
+              'altlasten',
+              'bildung',
+              'forschung',
+              'innovation',
+              'biodiversitat',
+              'biotechnologie',
+              'boden',
+              'chemikalien',
+              'elektrosmog',
+              'licht',
+              'ernahrung',
+              'wohnen',
+              'mobilitat',
+              'gesundheit',
+              'internationales',
+              'klima',
+              'landschaft',
+              'larm',
+              'luft',
+              'naturgefahren',
+              'recht',
+              'storfallvorsorge',
+              'umweltvertraglichkeitsprufung',
+              'wald',
+              'holz',
+              'wasser',
+              'wirtschaft',
+              'konsum'
+              ]
+
+
+# Iterate through BafuThemen and create a new column for each
+for thema in BafuThemen:
+    dfPackages[thema] = dfPackages['Keywords'].str.contains('\''+thema+'\'')
+
+# Calculate the count of True values for each Thema
+dfBafuThemen = pd.DataFrame({'Thema': BafuThemen})
+anzahl_list = []
+for thema in BafuThemen:
+    anzahl_list.append(len(dfPackages[dfPackages[thema] == True]))
+
+dfBafuThemen['Anzahl'] = anzahl_list
 
 # Mit folgender BaseURL können Details aller Packages abgerufen werden
 DatasetBaseURL = 'https://ckan.opendata.swiss/api/3/action/package_show?id='
@@ -135,6 +189,11 @@ dfLicenseCSV.to_csv("data/BAFU_OGD_Monitoring_License.csv", header=False, index=
 dfGeodatenCSV = dfGeodaten.groupby(['Mail','STAC'])['Package'].count().reset_index()
 dfGeodatenCSV['Date'] = datetime.today().strftime("%Y-%m-%d")
 dfGeodatenCSV.to_csv("data/BAFU_OGD_Monitoring_STAC.csv", header=False, index=False, mode='a')
+
+# Übersicht BAFU-Themen speichern
+dfBafuThemenCSV = dfBafuThemen
+dfBafuThemenCSV['Date'] = datetime.today().strftime("%Y-%m-%d")
+dfBafuThemenCSV.to_csv("data/BAFU_OGD_Monitoring_BafuThemen.csv", header=False, index=False, mode='a')
 
 """## Visualisierungen erstellen"""
 
@@ -272,5 +331,30 @@ plt.xticks(rotation=45, ha='right')
 plt.legend(title='STAC')
 plt.tight_layout()
 plt.savefig('plots/StacBarchart.png')
+plt.close()
+
+#BAFU Themen - Linechart
+dfBafuThemen = pd.read_csv("data/BAFU_OGD_Monitoring_BafuThemen.csv", parse_dates=['Date'])
+dfBafuThemenLine = dfBafuThemen[dfBafuThemen['Anzahl']>0]
+dfBafuThemenLine = dfBafuThemenLine.pivot(index="Date", columns=['Thema'],values="Anzahl")
+dfBafuThemenLine.plot(figsize=(15,10))
+plt.title("Anzahl OGD Datensätze nach Thema")
+plt.savefig('plots/BafuThemenLinechart.png')
+plt.close()
+
+#BAFU Themen - Barchart
+dfBafuThemenBarchart = dfBafuThemen
+dfBafuThemenBarchart = dfBafuThemenBarchart.loc[dfBafuThemenBarchart['Date']==datetime.today().strftime("%Y-%m-%d")]
+dfBafuThemenBarchart = dfBafuThemenBarchart[dfBafuThemenBarchart['Anzahl']>0]
+dfBafuThemenBarchart = dfBafuThemenBarchart.sort_values('Anzahl',ascending=False)
+
+fig, ax = plt.subplots()
+ax.bar(dfBafuThemenBarchart['Thema'], dfBafuThemenBarchart['Anzahl'])
+ax.set_title('Anzahl OGD Datensätze nach Thema')
+plt.xticks(rotation = 45)
+plt.ylabel("Anzahl Datensätze")
+plt.rcParams["figure.figsize"] = (10,5)
+ax.bar_label(ax.containers[0], label_type='edge')
+plt.savefig('plots/BafuThemenBarchart.png',bbox_inches='tight')
 plt.close()
 
