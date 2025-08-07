@@ -52,7 +52,7 @@ Das Monitoring basiert auf den OGD-Publikationen des BAFU auf [opendata.swiss](h
 - [Daten zum Thema Landschaft](https://opendata.swiss/de/dataset?keywords_de=landschaft&organization=bundesamt-fur-umwelt-bafu)
 - [Daten zum Thema Larm](https://opendata.swiss/de/dataset?keywords_de=larm&organization=bundesamt-fur-umwelt-bafu)
 - [Daten zum Thema Luft](https://opendata.swiss/de/dataset?keywords_de=luft&organization=bundesamt-fur-umwelt-bafu)
-- [Daten zum Thema Naturgefahren](https://opendata.swiss/de/dataset?keywords_de=naturgefahren&organization=bundesamt-fur-umwelt-bafu)
+- [Daten zum Thema Naturgefahren](https://opendata.swiss/de/dataset?keywords_de=naturgefahr&organization=bundesamt-fur-umwelt-bafu)
 - [Daten zum Thema Recht](https://opendata.swiss/de/dataset?keywords_de=recht&organization=bundesamt-fur-umwelt-bafu)
 - [Daten zum Thema Storfallvorsorge](https://opendata.swiss/de/dataset?keywords_de=storfallvorsorge&organization=bundesamt-fur-umwelt-bafu)
 - [Daten zum Thema Umweltvertraglichkeitsprufung](https://opendata.swiss/de/dataset?keywords_de=umweltvertraglichkeitsprufung&organization=bundesamt-fur-umwelt-bafu)
