@@ -31,7 +31,7 @@ Packages = requests.get(Packages).json()
 Title = [s['title_for_slug'] for s in Packages['result']['packages']]
 Maintainer = [s['maintainer'] for s in Packages['result']['packages']]
 Email = [s['maintainer_email'] for s in Packages['result']['packages']]
-LastModified = [s['modified'] for s in Packages['result']['packages']]
+LastModified = [s.get('modified','') for s in Packages['result']['packages']]
 Keywords = [s['keywords'] for s in Packages['result']['packages']]
 
 # Dataframe für Packages erstellen
