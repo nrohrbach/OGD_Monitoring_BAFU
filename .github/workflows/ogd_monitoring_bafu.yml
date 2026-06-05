@@ -1,43 +1,39 @@
-name: ogd_monitoring_bafu
+name: OGD Monitoring BAFU
 
-on: 
+on:
   workflow_dispatch:
   schedule:
-    - cron: "15 6 * * *" #runs at 06:15 UTC
+    - cron: "15 6 * * *"  # täglich 06:15 UTC
 
 permissions:
   contents: write
-  
-jobs:
-  build:
-    runs-on: ubuntu-latest
-    steps:
-    
-      - name: checkout repo content
-        uses: actions/checkout@v3 # checkout the repository content to github runner.
-        
-      - name: setup python
-        uses: actions/setup-python@v4
-        with:
-          python-version: '3.10' #install the python needed
 
-      - name: install python packages
+jobs:
+  monitoring:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Repository auschecken
+        uses: actions/checkout@v4
+
+      - name: Python einrichten
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: "pip"
+
+      - name: Abhängigkeiten installieren
         run: |
           python -m pip install --upgrade pip
           pip install -r requirements.txt
-          
-      - name: execute py script
+
+      - name: Monitoring ausführen
         run: python OGD_Monitoring_BAFU.py
-     
-      - name: Commit files
+
+      - name: Daten committen und pushen
         run: |
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Actions"
-          git add -A
-          git commit -m "update data" -a --allow-empty
-          
-      - name: push changes
-        uses: ad-m/github-push-action@master
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          branch: main
+          git add data/ plots/
+          git diff --staged --quiet || git commit -m "chore: Monitoring update $(date -u +%Y-%m-%d)"
+          git push
