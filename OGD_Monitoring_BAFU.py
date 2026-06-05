@@ -23,19 +23,28 @@ import matplotlib.pyplot as plt
 
 """## Alle Packages des BAFU abfragen"""
 
-# Abfrage aller CKAN Packages des BAFU
-Packages = "https://ckan.opendata.swiss/api/3/action/organization_show?id=bundesamt-fur-umwelt-bafu&include_datasets=True"
-Packages = requests.get(Packages).json()
+# Abfrage aller CKAN Packages des BAFU via package_search (mit Pagination)
+# organization_show liefert nur 10 Packages via SOLR mit unvollständigen Feldern;
+# package_search gibt alle Packages zurück.
+all_packages_raw = []
+rows = 500
+start = 0
+while True:
+    url = (f"https://ckan.opendata.swiss/api/3/action/package_search"
+           f"?fq=organization:bundesamt-fur-umwelt-bafu&rows={rows}&start={start}")
+    response = requests.get(url).json()
+    results = response['result']['results']
+    all_packages_raw.extend(results)
+    if len(all_packages_raw) >= response['result']['count'] or len(results) == 0:
+        break
+    start += rows
 
-# Alle Bezeichungen und Publisher extrahieren
-Title = [s['title_for_slug'] for s in Packages['result']['packages']]
-Maintainer = [s['maintainer'] for s in Packages['result']['packages']]
-Email = [s['maintainer_email'] for s in Packages['result']['packages']]
-LastModified = [s.get('modified','') for s in Packages['result']['packages']]
-Keywords = [s['keywords'] for s in Packages['result']['packages']]
+# Alle Bezeichungen und Keywords extrahieren
+Title = [s['name'] for s in all_packages_raw]
+Keywords = [s.get('keywords', []) for s in all_packages_raw]
 
-# Dataframe für Packages erstellen
-dict = {'Publisher': Maintainer, 'Mail': Email, 'Package': Title, 'LastModified': LastModified, 'Keywords': Keywords}
+# Dataframe für Packages erstellen (Publisher/Mail folgen später aus package_show)
+dict = {'Package': Title, 'Keywords': Keywords}
 dfPackages = pd.DataFrame(dict)
 
 #Keywords in String umwandeln
